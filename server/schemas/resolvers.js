@@ -48,8 +48,10 @@ const resolvers = {
                     { $pull: { savedBooks: { bookId: bookId } } },
                     { new: true }
                 )
-                return updatedUser
+                return updatedUser;
             }
         }
     }
-}
+};
+
+module.exports = resolvers;
