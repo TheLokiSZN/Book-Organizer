@@ -23,7 +23,7 @@ const resolvers = {
             if (!user) {
                 throw new AuthenticationError('Incorrect user')
             }
-            const correctPassword = await user.isCorrectPassword(password)
+            const correctPassword = await User.isCorrectPassword(password)
             if (!correctPassword) {
                 throw new AuthenticationError('Incorrect password')
             }
@@ -32,16 +32,23 @@ const resolvers = {
         },
         saveBook: async(parent, { bookData }, context) => {
             if (context.user) {
-                const updatedUser = await user.findByIdAndUpdate(
-                    {_id: context.user._id}
-                    {saveBook:}
-                    {}
+                const updatedUser = await User.findByIdAndUpdate(
+                    {_id: context.user._id},
+                    { $addToSet: { savedBooks: book } },
+                    { new: true }
                 )
+                return updatedUser;
             }
+            throw new AuthenticationError('You need to be logged in')
         },
         removeBook : async(parent, {bookData}, context) => {
             if (context.user) {
-                const 
+                const updatedUser = await User.findOneAndUpdate(
+                    {_id: context.user._id},
+                    { $pull: { savedBooks: { bookId: bookId } } },
+                    { new: true }
+                )
+                return updatedUser
             }
         }
     }
